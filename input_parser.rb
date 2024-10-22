@@ -9,6 +9,6 @@ class InputParser
   rescue Errno::ENOENT => e # add any additional exception from File.read here
     raise Error, "Could not read the file: #{e}"
   rescue JSON::ParserError => e
-    raise Error, "Could not parse the file: #{e}"
+    raise Error, "Could not parse #{file} file: #{e}"
   end
 end
