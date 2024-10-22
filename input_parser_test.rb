@@ -13,4 +13,12 @@ class InputParserTest < Minitest::Test
     }]
     assert_equal expected, InputParser.read_and_parse("./fixtures/valid.json")
   end
+
+  def test_reports_problem_with_file_read
+    assert_raises(InputParser::Error) { InputParser.read_and_parse("./fixtures/missing.json") }
+  end
+
+  def test_reports_problem_with_file_read
+    assert_raises(InputParser::Error) { InputParser.read_and_parse("./fixtures/invalid.json") }
+  end
 end
