@@ -11,14 +11,14 @@ class InputParserTest < Minitest::Test
       id: 2,
       name: "Sam"
     }]
-    assert_equal expected, InputParser.read_and_parse("./fixtures/valid.json")
+    assert_equal expected, InputParser.new.parse_json("./fixtures/valid.json")
   end
 
   def test_reports_problem_with_file_read
-    assert_raises(InputParser::Error) { InputParser.read_and_parse("./fixtures/missing.json") }
+    assert_raises(InputParser::Error) { InputParser.new.parse_json("./fixtures/missing.json") }
   end
 
   def test_reports_problem_with_json_format
-    assert_raises(InputParser::Error) { InputParser.read_and_parse("./fixtures/invalid.json") }
+    assert_raises(InputParser::Error) { InputParser.new.parse_json("./fixtures/invalid.json") }
   end
 end

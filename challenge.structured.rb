@@ -1,6 +1,10 @@
 #! ruby
 
 require_relative "input_parser"
+require_relative "output_formatter"
 
-users = InputParser.read_and_parse("./users.json")
-companies = InputParser.read_and_parse("./companies.json")
+input_parser = InputParser.new
+users = input_parser.parse_json("./users.json")
+companies = input_parser.parse_json("./companies.json")
+
+puts OutputFormatter.new(companies, users).top_up_info

@@ -3,7 +3,7 @@ require "json"
 class InputParser
   class Error < StandardError; end
 
-  def self.read_and_parse(file)
+  def parse_json(file)
     # Note: would use `.map(&:symbolize_keys)` with active_support
     JSON.parse(File.read(file)).map { |hash| hash.transform_keys(&:to_sym) }
   rescue Errno::ENOENT => e # add any additional exception from File.read here
