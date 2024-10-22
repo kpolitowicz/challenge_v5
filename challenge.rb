@@ -1,8 +1,8 @@
 #! ruby
 
-require "json"
+require_relative "input_parser"
 
-users = JSON.parse(File.read("./users.json"))
-companies = JSON.parse(File.read("./companies.json"))
+users = InputParser.read_and_parse("./users.json")
+companies = InputParser.read_and_parse("./companies.json")
 
 puts companies
