@@ -36,7 +36,7 @@ companies.sort_by { |c| c["id"] }.each do |company|
   puts "\tUsers Not Emailed:"
   print_user_info(users_not_emailed, company)
 
-  puts "\t\tTotal amount of top ups for "\
+  puts "\t\tTotal amount of top ups for " \
     "#{company["name"]}: #{(users_emailed.count + users_not_emailed.count) * company["top_up"]}"
 end
 puts # the example_output.txt ends with empty line

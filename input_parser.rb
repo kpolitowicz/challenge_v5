@@ -1,7 +1,7 @@
 require "json"
 
 class InputParser
-  class Error < StandardError ; end
+  class Error < StandardError; end
 
   def self.read_and_parse(file)
     # Note: would use `.map(&:symbolize_keys)` with active_support
