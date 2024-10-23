@@ -28,8 +28,8 @@ class OutputFormatter
     <<~COMPANY_INFO
       \tCompany Id: #{company[:id]}
       \tCompany Name: #{company[:name]}
-      #{user_info("\tUsers Emailed:", company, users_emailed)}
-      #{user_info("\tUsers Not Emailed:", company, users_not_emailed)}
+      #{users_info("\tUsers Emailed:", company, users_emailed)}
+      #{users_info("\tUsers Not Emailed:", company, users_not_emailed)}
       \t\tTotal amount of top ups for #{company[:name]}: #{total_top_ups}
     COMPANY_INFO
   end
@@ -42,7 +42,7 @@ class OutputFormatter
       .map { |list_or_nil| Array(list_or_nil) }
   end
 
-  def user_info(header, company, users)
+  def users_info(header, company, users)
     return header if users.empty?
 
     "#{header}\n" +

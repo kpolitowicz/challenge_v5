@@ -213,20 +213,6 @@ class OutputFormatterTest < Minitest::Test
     }]
     of = OutputFormatter.new(companies, [])
 
-    expected = <<~SINGLE_COMPANY_INFO
-      \tCompany Id: 1
-      \tCompany Name: Blue Cat Inc.
-      \tUsers Emailed:
-      \t\tBeck, Terra, terra.beck@demo.com
-      \t\t  Previous Token Balance, 41
-      \t\t  New Token Balance 112
-      \tUsers Not Emailed:
-      \t\tPierce, Amanda, amanda.pierce@fake.com
-      \t\t  Previous Token Balance, 24
-      \t\t  New Token Balance 95
-      \t\tTotal amount of top ups for Blue Cat Inc.: 142
-    SINGLE_COMPANY_INFO
-
     assert_nil of.company_info(companies.first)
   end
 
@@ -348,5 +334,54 @@ class OutputFormatterTest < Minitest::Test
 
     assert_equal [], users_emailed.map { |u| u[:first_name] }
     assert_equal ["Amanda", "Terra"], users_not_emailed.map { |u| u[:first_name] }
+  end
+
+  def test_generates_users_info_with_header
+    companies = [{
+      id: 1,
+      name: "Blue Cat Inc.",
+      top_up: 71,
+    }]
+    users = [{
+      id: 7,
+      first_name: "Amanda",
+      last_name: "Pierce",
+      email: "amanda.pierce@fake.com",
+      company_id: 1,
+      tokens: 24
+    }, {
+      id: 9,
+      first_name: "Terra",
+      last_name: "Beck",
+      email: "terra.beck@demo.com",
+      company_id: 1,
+      tokens: 41
+    }]
+    of = OutputFormatter.new(companies, users)
+
+    expected = <<~USERS_INFO
+      \tCustom Header:
+      \t\tPierce, Amanda, amanda.pierce@fake.com
+      \t\t  Previous Token Balance, 24
+      \t\t  New Token Balance 95
+      \t\tBeck, Terra, terra.beck@demo.com
+      \t\t  Previous Token Balance, 41
+      \t\t  New Token Balance 112
+    USERS_INFO
+
+    assert_equal expected.rstrip, of.users_info("\tCustom Header:", companies.first, users)
+  end
+
+  def test_users_info_only_header_if_no_users
+    companies = [{
+      id: 1,
+      name: "Blue Cat Inc.",
+      top_up: 71,
+    }]
+    users = []
+    header = "\tCustom Header:"
+    of = OutputFormatter.new(companies, users)
+
+    assert_equal header, of.users_info(header, companies.first, users)
   end
 end
