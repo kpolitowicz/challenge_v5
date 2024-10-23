@@ -111,6 +111,54 @@ class OutputFormatterTest < Minitest::Test
     assert_equal expected, of.top_up_info
   end
 
+  def test_top_up_info_for_companies_skips_companies_without_users
+    companies = [{
+      id: 1,
+      name: "Blue Cat Inc.",
+      top_up: 71,
+      email_status: true
+    }, {
+      id: 2,
+      name: "Yellow Mouse Inc.",
+      top_up: 37,
+      email_status: true
+    }]
+    users = [{
+      id: 1,
+      first_name: "Tanya",
+      last_name: "Nichols",
+      email: "tanya.nichols@test.com",
+      company_id: 2,
+      email_status: true,
+      active_status: true,
+      tokens: 23
+    }, {
+      id: 9,
+      first_name: "Terra",
+      last_name: "Beck",
+      email: "terra.beck@demo.com",
+      company_id: 1,
+      email_status: true,
+      active_status: false,
+      tokens: 41
+    }]
+    of = OutputFormatter.new(companies, users)
+
+    expected = <<~SKIPPED_COMPANIES_INFO
+
+      \tCompany Id: 2
+      \tCompany Name: Yellow Mouse Inc.
+      \tUsers Emailed:
+      \t\tNichols, Tanya, tanya.nichols@test.com
+      \t\t  Previous Token Balance, 23
+      \t\t  New Token Balance 60
+      \tUsers Not Emailed:
+      \t\tTotal amount of top ups for Yellow Mouse Inc.: 37
+    SKIPPED_COMPANIES_INFO
+
+    assert_equal expected, of.top_up_info
+  end
+
   def test_formats_single_company_info
     companies = [{
       id: 1,

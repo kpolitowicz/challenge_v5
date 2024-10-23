@@ -12,12 +12,13 @@ class OutputFormatter
 
   def top_up_info
     "\n" +
-      companies.map { |company| company_info(company) }.join("\n").rstrip +
+      companies.map { |company| company_info(company) }.compact.join("\n").rstrip +
     "\n"
   end
 
   def company_info(company)
     users_emailed, users_not_emailed = group_active_users_by_email_status(company, users[company[:id]])
+    return nil if users_emailed.empty? && users_not_emailed.empty?
     total_top_ups = (users_emailed.count + users_not_emailed.count) * company[:top_up]
 
     <<~COMPANY_INFO
