@@ -1,5 +1,6 @@
 require "json"
 
+# Usage: `InputParser.parse_json(file_name)`
 class InputParser
   class Error < StandardError; end
 

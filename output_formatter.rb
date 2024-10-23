@@ -1,3 +1,7 @@
+# Usage: `OutputFormatter.new(companies, users).top_up_info`
+#
+# Individual methods like `company_info` and `user_info` may be used to generate chunks of output if needed.
+#
 class OutputFormatter
   attr_reader :companies, :users
 
@@ -25,6 +29,9 @@ class OutputFormatter
 
     total_top_ups = (users_emailed.count + users_not_emailed.count) * company[:top_up]
 
+    # HEREDOC is used here due to simplicity. In production, we would likely use something better (e.g. Erb)
+    # depending on how the script results would need to be delivered (email? admin dashboard?)
+    # Use of HEREDOC necessitates some tricks with join/rstrip/compact to get the output just right.
     <<~COMPANY_INFO
       \tCompany Id: #{company[:id]}
       \tCompany Name: #{company[:name]}
