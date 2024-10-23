@@ -1,15 +1,17 @@
 require "minitest/autorun"
-require "json"
 
 require_relative "output_formatter"
+require_relative "input_parser"
 
 class OutputFormatterTest < Minitest::Test
   # This is an end-to-end test for to make sure the example output file is correct
   # All edge cases like email statuses and users being active are handled individually
   # by unit tests below.
   def test_matches_example_output
-    users = JSON.parse(File.read("./users.json")).map { |hash| hash.transform_keys(&:to_sym) }
-    companies = JSON.parse(File.read("./companies.json")).map { |hash| hash.transform_keys(&:to_sym) }
+    input_parser = InputParser.new
+    users = input_parser.parse_json("./users.json")
+    companies = input_parser.parse_json("./companies.json")
+
     expected_output = File.read("./example_output.txt")
 
     assert_equal expected_output, OutputFormatter.new(companies, users).top_up_info
