@@ -221,7 +221,7 @@ class OutputFormatterTest < Minitest::Test
   def test_single_company_info_nil_if_all_users_inactive
     company = {
       id: 1,
-      name: "Blue Cat Inc.",
+      name: "Blue Cat Inc."
     }
     users = [{
       id: 7,
@@ -342,7 +342,7 @@ class OutputFormatterTest < Minitest::Test
     company = {
       id: 1,
       name: "Blue Cat Inc.",
-      top_up: 71,
+      top_up: 71
     }
     users = [{
       id: 7,
@@ -378,7 +378,7 @@ class OutputFormatterTest < Minitest::Test
     company = {
       id: 1,
       name: "Blue Cat Inc.",
-      top_up: 71,
+      top_up: 71
     }
     users = []
     header = "\tCustom Header:"

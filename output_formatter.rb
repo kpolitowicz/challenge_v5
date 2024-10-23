@@ -10,13 +10,13 @@ class OutputFormatter
     # specified in the assignment.
     @users = users
       .group_by { |u| u[:company_id] }
-      .transform_values { |v| v.sort_by{ |u| u[:last_name] }}
+      .transform_values { |v| v.sort_by { |u| u[:last_name] } }
   end
 
   def top_up_info
     "\n" +
       companies.map { |company| company_info(company) }.compact.join("\n") +
-    "\n"
+      "\n"
   end
 
   def company_info(company)
