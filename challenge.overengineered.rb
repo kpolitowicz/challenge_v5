@@ -28,6 +28,8 @@ begin
   users = input_parser.parse_json("./users.json")
   companies = input_parser.parse_json("./companies.json")
 
+  # Validation is proof-of-concept - there is some cleanup pending once
+  # the requirements are clarified.
   companies_validator = CompaniesValidator.new
   users_validator = UsersValidator.new
   companies_valid = companies_validator.valid?(companies)
