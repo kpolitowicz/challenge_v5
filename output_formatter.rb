@@ -23,10 +23,8 @@ class OutputFormatter
     <<~COMPANY_INFO
       \tCompany Id: #{company[:id]}
       \tCompany Name: #{company[:name]}
-      \tUsers Emailed:
-      #{user_info(company, users_emailed)}
-      \tUsers Not Emailed:
-      #{user_info(company, users_not_emailed) }
+      #{user_info("\tUsers Emailed:", company, users_emailed)}
+      #{user_info("\tUsers Not Emailed:", company, users_not_emailed)}
       \t\tTotal amount of top ups for #{company[:name]}: #{total_top_ups}
     COMPANY_INFO
   end
@@ -39,13 +37,16 @@ class OutputFormatter
       .map { |list_or_nil| Array(list_or_nil) }
   end
 
-  def user_info(company, users)
-    users.map do |u|
-      <<~USER_INFO
-        \t\t#{u[:last_name]}, #{u[:first_name]}, #{u[:email]}
-        \t\t  Previous Token Balance, #{u[:tokens]}
-        \t\t  New Token Balance #{u[:tokens] + company[:top_up]}
-      USER_INFO
-    end.join("\n").rstrip
+  def user_info(header, company, users)
+    return header if users.empty?
+
+    "#{header}\n" +
+      users.map do |u|
+        <<~USER_INFO
+          \t\t#{u[:last_name]}, #{u[:first_name]}, #{u[:email]}
+          \t\t  Previous Token Balance, #{u[:tokens]}
+          \t\t  New Token Balance #{u[:tokens] + company[:top_up]}
+        USER_INFO
+      end.join("\n").rstrip
   end
 end
