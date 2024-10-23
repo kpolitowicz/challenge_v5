@@ -79,9 +79,9 @@ unsquashed if you're interested in my implementation process.
 
 ### Overengineering
 
-No, I don't usually spend 10 hours of what should be implemented in 1 or 2. My first solution (`challenge.rb`) was ready
+No, I don't usually spend 10 hours on what should be implemented in 1 or 2. My first solution (`challenge.rb`) was ready
 in ~2 hours after I received the assignment (I sent it to Bianca with my questions). However, given this is an interview
-test and I'm expected to show off my skills as best as I can, I spend well over 2 hours to implement an overengineered
+test and I'm expected to show off my skills as best as I can, I spent well over 2 hours to implement an overengineered
 version of it, with error handling, tests, structure (`challenge.overengineered.rb`). That said, I had to stop
 somewhere. In an actual production-ready project I would have existing patterns to follow, better tools to implement
 tests (e.g. rspec), better tools to validate (rails validations) and type-cast (active_record; dry-types) data. I would
