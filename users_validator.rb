@@ -128,4 +128,3 @@ class UsersValidator
     "User: #{user[:last_name]}, #{user[:first_name]}, #{user[:email]}, Id: #{user[:id]}"
   end
 end
-
