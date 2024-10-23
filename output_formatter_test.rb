@@ -164,12 +164,12 @@ class OutputFormatterTest < Minitest::Test
   end
 
   def test_formats_single_company_info
-    companies = [{
+    company = {
       id: 1,
       name: "Blue Cat Inc.",
       top_up: 71,
       email_status: true
-    }]
+    }
     users = [{
       id: 7,
       first_name: "Amanda",
@@ -189,7 +189,7 @@ class OutputFormatterTest < Minitest::Test
       active_status: true,
       tokens: 41
     }]
-    of = OutputFormatter.new(companies, users)
+    of = OutputFormatter.new([company], users)
 
     expected = <<~SINGLE_COMPANY_INFO
       \tCompany Id: 1
@@ -205,24 +205,24 @@ class OutputFormatterTest < Minitest::Test
       \t\tTotal amount of top ups for Blue Cat Inc.: 142
     SINGLE_COMPANY_INFO
 
-    assert_equal expected, of.company_info(companies.first)
+    assert_equal expected, of.company_info(company)
   end
 
   def test_single_company_info_nil_if_no_users
-    companies = [{
+    company = {
       id: 1,
       name: "Blue Cat Inc."
-    }]
-    of = OutputFormatter.new(companies, [])
+    }
+    of = OutputFormatter.new([company], [])
 
-    assert_nil of.company_info(companies.first)
+    assert_nil of.company_info(company)
   end
 
   def test_single_company_info_nil_if_all_users_inactive
-    companies = [{
+    company = {
       id: 1,
       name: "Blue Cat Inc.",
-    }]
+    }
     users = [{
       id: 7,
       first_name: "Amanda",
@@ -240,17 +240,17 @@ class OutputFormatterTest < Minitest::Test
       email_status: true,
       active_status: false
     }]
-    of = OutputFormatter.new(companies, users)
+    of = OutputFormatter.new([company], users)
 
-    assert_nil of.company_info(companies.first)
+    assert_nil of.company_info(company)
   end
 
   def test_groups_users_by_email_status
-    companies = [{
+    company = {
       id: 1,
       name: "Blue Cat Inc.",
       email_status: true
-    }]
+    }
     users = [{
       id: 7,
       first_name: "Amanda",
@@ -268,20 +268,20 @@ class OutputFormatterTest < Minitest::Test
       email_status: true,
       active_status: true
     }]
-    of = OutputFormatter.new(companies, users)
+    of = OutputFormatter.new([company], users)
 
-    users_emailed, users_not_emailed = of.group_active_users_by_email_status(companies.first, users)
+    users_emailed, users_not_emailed = of.group_active_users_by_email_status(company, users)
 
     assert_equal ["Terra"], users_emailed.map { |u| u[:first_name] }
     assert_equal ["Amanda"], users_not_emailed.map { |u| u[:first_name] }
   end
 
   def test_groups_active_users_only
-    companies = [{
+    company = {
       id: 1,
       name: "Blue Cat Inc.",
       email_status: true
-    }]
+    }
     users = [{
       id: 7,
       first_name: "Amanda",
@@ -299,20 +299,20 @@ class OutputFormatterTest < Minitest::Test
       email_status: true,
       active_status: true
     }]
-    of = OutputFormatter.new(companies, users)
+    of = OutputFormatter.new([company], users)
 
-    users_emailed, users_not_emailed = of.group_active_users_by_email_status(companies.first, users)
+    users_emailed, users_not_emailed = of.group_active_users_by_email_status(company, users)
 
     assert_equal ["Terra"], users_emailed.map { |u| u[:first_name] }
     assert_equal [], users_not_emailed.map { |u| u[:first_name] }
   end
 
   def test_puts_users_on_not_emailed_if_company_email_status_false
-    companies = [{
+    company = {
       id: 1,
       name: "Blue Cat Inc.",
       email_status: false
-    }]
+    }
     users = [{
       id: 7,
       first_name: "Amanda",
@@ -330,20 +330,20 @@ class OutputFormatterTest < Minitest::Test
       email_status: true,
       active_status: true
     }]
-    of = OutputFormatter.new(companies, users)
+    of = OutputFormatter.new([company], users)
 
-    users_emailed, users_not_emailed = of.group_active_users_by_email_status(companies.first, users)
+    users_emailed, users_not_emailed = of.group_active_users_by_email_status(company, users)
 
     assert_equal [], users_emailed.map { |u| u[:first_name] }
     assert_equal ["Amanda", "Terra"], users_not_emailed.map { |u| u[:first_name] }
   end
 
   def test_generates_users_info_with_header
-    companies = [{
+    company = {
       id: 1,
       name: "Blue Cat Inc.",
       top_up: 71,
-    }]
+    }
     users = [{
       id: 7,
       first_name: "Amanda",
@@ -359,7 +359,7 @@ class OutputFormatterTest < Minitest::Test
       company_id: 1,
       tokens: 41
     }]
-    of = OutputFormatter.new(companies, users)
+    of = OutputFormatter.new([company], users)
 
     expected = <<~USERS_INFO
       \tCustom Header:
@@ -371,19 +371,19 @@ class OutputFormatterTest < Minitest::Test
       \t\t  New Token Balance 112
     USERS_INFO
 
-    assert_equal expected.rstrip, of.users_info("\tCustom Header:", companies.first, users)
+    assert_equal expected.rstrip, of.users_info("\tCustom Header:", company, users)
   end
 
   def test_users_info_only_header_if_no_users
-    companies = [{
+    company = {
       id: 1,
       name: "Blue Cat Inc.",
       top_up: 71,
-    }]
+    }
     users = []
     header = "\tCustom Header:"
-    of = OutputFormatter.new(companies, users)
+    of = OutputFormatter.new([company], users)
 
-    assert_equal header, of.users_info(header, companies.first, users)
+    assert_equal header, of.users_info(header, company, users)
   end
 end
