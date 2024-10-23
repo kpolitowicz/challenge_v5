@@ -256,4 +256,97 @@ class OutputFormatterTest < Minitest::Test
 
     assert_nil of.company_info(companies.first)
   end
+
+  def test_groups_users_by_email_status
+    companies = [{
+      id: 1,
+      name: "Blue Cat Inc.",
+      email_status: true
+    }]
+    users = [{
+      id: 7,
+      first_name: "Amanda",
+      last_name: "Pierce",
+      email: "amanda.pierce@fake.com",
+      company_id: 1,
+      email_status: false,
+      active_status: true
+    }, {
+      id: 9,
+      first_name: "Terra",
+      last_name: "Beck",
+      email: "terra.beck@demo.com",
+      company_id: 1,
+      email_status: true,
+      active_status: true
+    }]
+    of = OutputFormatter.new(companies, users)
+
+    users_emailed, users_not_emailed = of.group_active_users_by_email_status(companies.first, users)
+
+    assert_equal ["Terra"], users_emailed.map { |u| u[:first_name] }
+    assert_equal ["Amanda"], users_not_emailed.map { |u| u[:first_name] }
+  end
+
+  def test_groups_active_users_only
+    companies = [{
+      id: 1,
+      name: "Blue Cat Inc.",
+      email_status: true
+    }]
+    users = [{
+      id: 7,
+      first_name: "Amanda",
+      last_name: "Pierce",
+      email: "amanda.pierce@fake.com",
+      company_id: 1,
+      email_status: false,
+      active_status: false
+    }, {
+      id: 9,
+      first_name: "Terra",
+      last_name: "Beck",
+      email: "terra.beck@demo.com",
+      company_id: 1,
+      email_status: true,
+      active_status: true
+    }]
+    of = OutputFormatter.new(companies, users)
+
+    users_emailed, users_not_emailed = of.group_active_users_by_email_status(companies.first, users)
+
+    assert_equal ["Terra"], users_emailed.map { |u| u[:first_name] }
+    assert_equal [], users_not_emailed.map { |u| u[:first_name] }
+  end
+
+  def test_puts_users_on_not_emailed_if_company_email_status_false
+    companies = [{
+      id: 1,
+      name: "Blue Cat Inc.",
+      email_status: false
+    }]
+    users = [{
+      id: 7,
+      first_name: "Amanda",
+      last_name: "Pierce",
+      email: "amanda.pierce@fake.com",
+      company_id: 1,
+      email_status: false,
+      active_status: true
+    }, {
+      id: 9,
+      first_name: "Terra",
+      last_name: "Beck",
+      email: "terra.beck@demo.com",
+      company_id: 1,
+      email_status: true,
+      active_status: true
+    }]
+    of = OutputFormatter.new(companies, users)
+
+    users_emailed, users_not_emailed = of.group_active_users_by_email_status(companies.first, users)
+
+    assert_equal [], users_emailed.map { |u| u[:first_name] }
+    assert_equal ["Amanda", "Terra"], users_not_emailed.map { |u| u[:first_name] }
+  end
 end
