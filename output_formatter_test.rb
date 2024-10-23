@@ -205,4 +205,55 @@ class OutputFormatterTest < Minitest::Test
 
     assert_equal expected, of.company_info(companies.first)
   end
+
+  def test_single_company_info_nil_if_no_users
+    companies = [{
+      id: 1,
+      name: "Blue Cat Inc."
+    }]
+    of = OutputFormatter.new(companies, [])
+
+    expected = <<~SINGLE_COMPANY_INFO
+      \tCompany Id: 1
+      \tCompany Name: Blue Cat Inc.
+      \tUsers Emailed:
+      \t\tBeck, Terra, terra.beck@demo.com
+      \t\t  Previous Token Balance, 41
+      \t\t  New Token Balance 112
+      \tUsers Not Emailed:
+      \t\tPierce, Amanda, amanda.pierce@fake.com
+      \t\t  Previous Token Balance, 24
+      \t\t  New Token Balance 95
+      \t\tTotal amount of top ups for Blue Cat Inc.: 142
+    SINGLE_COMPANY_INFO
+
+    assert_nil of.company_info(companies.first)
+  end
+
+  def test_single_company_info_nil_if_all_users_inactive
+    companies = [{
+      id: 1,
+      name: "Blue Cat Inc.",
+    }]
+    users = [{
+      id: 7,
+      first_name: "Amanda",
+      last_name: "Pierce",
+      email: "amanda.pierce@fake.com",
+      company_id: 1,
+      email_status: false,
+      active_status: false
+    }, {
+      id: 9,
+      first_name: "Terra",
+      last_name: "Beck",
+      email: "terra.beck@demo.com",
+      company_id: 1,
+      email_status: true,
+      active_status: false
+    }]
+    of = OutputFormatter.new(companies, users)
+
+    assert_nil of.company_info(companies.first)
+  end
 end
