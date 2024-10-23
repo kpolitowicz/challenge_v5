@@ -2,6 +2,9 @@
 
 require "json"
 
+# Filters users by their `active_status`, groups them by
+# company's and user's `email_status` (both have to be `true` to send an email)
+# and returns two lists: users emailed and users not emailed.
 def group_and_sort_users(company, users)
   users
     .select { |u| u["company_id"] == company["id"] && u["active_status"] }
@@ -11,6 +14,7 @@ def group_and_sort_users(company, users)
     .map { |list_or_nil| Array(list_or_nil) }
 end
 
+# Prints the formatted information for a single user.
 def print_user_info(users, company)
   users.each do |u|
     puts "\t\t#{u["last_name"]}, #{u["first_name"]}, #{u["email"]}"
@@ -24,6 +28,7 @@ companies = JSON.parse(File.read("./companies.json"))
 
 companies.sort_by { |c| c["id"] }.each do |company|
   users_emailed, users_not_emailed = group_and_sort_users(company, users)
+  # We don't output companies without active users (no top ups).
   next if users_emailed.empty? && users_not_emailed.empty?
 
   puts # the example_output.txt starts with empty line
