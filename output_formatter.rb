@@ -1,6 +1,4 @@
 class OutputFormatter
-  class Error < StandardError; end
-
   attr_reader :companies, :users
 
   def initialize(companies, users)
