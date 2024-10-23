@@ -7,13 +7,13 @@ class OutputFormatterTest < Minitest::Test
   # This is an end-to-end test for to make sure the example output file is correct
   # All edge cases like email statuses and users being active are handled individually
   # by unit tests below.
-  # def test_matches_example_output
-  #   users = JSON.parse(File.read("./users.json"))
-  #   companies = JSON.parse(File.read("./companies.json"))
-  #   expected_output = File.read("./example_output.txt")
+  def test_matches_example_output
+    users = JSON.parse(File.read("./users.json")).map { |hash| hash.transform_keys(&:to_sym) }
+    companies = JSON.parse(File.read("./companies.json")).map { |hash| hash.transform_keys(&:to_sym) }
+    expected_output = File.read("./example_output.txt")
 
-  #   assert_equal expected_output, OutputFormatter.new(companies, users).top_up_info
-  # end
+    assert_equal expected_output, OutputFormatter.new(companies, users).top_up_info
+  end
 
   def test_inits_with_companies_sorted_by_id
     companies = [{
@@ -106,6 +106,7 @@ class OutputFormatterTest < Minitest::Test
       \t\t  New Token Balance 60
       \tUsers Not Emailed:
       \t\tTotal amount of top ups for Yellow Mouse Inc.: 37
+
     TWO_COMPANIES_INFO
 
     assert_equal expected, of.top_up_info
@@ -154,6 +155,7 @@ class OutputFormatterTest < Minitest::Test
       \t\t  New Token Balance 60
       \tUsers Not Emailed:
       \t\tTotal amount of top ups for Yellow Mouse Inc.: 37
+
     SKIPPED_COMPANIES_INFO
 
     assert_equal expected, of.top_up_info
