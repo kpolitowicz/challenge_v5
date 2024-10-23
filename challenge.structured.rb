@@ -2,7 +2,26 @@
 
 require_relative "input_parser"
 require_relative "companies_validator"
+require_relative "users_validator"
 require_relative "output_formatter"
+
+def report_errors(companies_validator, users_validator)
+  unless companies_validator.errors.empty?
+    warn "There was a problem with companies data (inspect the JSON file):"
+    companies_validator.errors.each do |key, errors|
+      warn "\t#{key}:"
+      errors.each { |error| warn "\t\t#{error}" }
+    end
+  end
+
+  unless users_validator.errors.empty?
+    warn "There was a problem with users data (inspect the JSON file):"
+    users_validator.errors.each do |key, errors|
+      warn "\t#{key}:"
+      errors.each { |error| warn "\t\t#{error}" }
+    end
+  end
+end
 
 begin
   input_parser = InputParser.new
@@ -10,15 +29,14 @@ begin
   companies = input_parser.parse_json("./companies.json")
 
   companies_validator = CompaniesValidator.new
-  if companies_validator.valid?(companies)
+  users_validator = UsersValidator.new
+  companies_valid = companies_validator.valid?(companies)
+  users_valid = users_validator.valid?(users)
+  if companies_valid && users_valid
     # Using print to output top_up_info as-is (puts would add a new line)
     print OutputFormatter.new(companies, users).top_up_info
   else
-    warn "There was a problem with companies data (inspect the JSON file):"
-    companies_validator.errors.each do |key, errors|
-      warn "\t#{key}:"
-      errors.each { |error| warn "\t\t#{error}" }
-    end
+    report_errors(companies_validator, users_validator)
   end
 rescue InputParser::Error => e
   warn "There was somthing wrong with input file"

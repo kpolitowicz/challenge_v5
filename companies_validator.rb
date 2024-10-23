@@ -1,4 +1,4 @@
-# Proof of concept validation (no tests, no refactoring done)
+# Proof of concept validation (no tests, no refactoring/deduplication done)
 #
 # A valid companies param looks like this:
 # [
